@@ -1,6 +1,6 @@
-import { BaseMapType } from "../types";
-import t from "src/l10n/locale";
-import { EditParametersModal } from "src/modals/mapview";
+import { BaseMapType } from "../../types";
+import t from "../l10n/locale";
+import { EditParametersModal } from "../modals/mapview";
 import { FontAwesomeControl, FontAwesomeControlOptions } from "./controls";
 
 class MapViewControl extends FontAwesomeControl {

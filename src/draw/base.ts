@@ -1,7 +1,7 @@
 import {
     FontAwesomeControl,
     FontAwesomeControlOptions
-} from "src/controls/controls";
+} from "../controls/controls";
 import { CompleteControl, UndoControl, CancelControl } from "./actions";
 import { DrawControl } from "./controls";
 
@@ -30,7 +30,6 @@ export abstract class BaseDrawControl extends FontAwesomeControl {
     }
     closeActions() {
         this.actionsEl.removeClass("expanded");
-        
     }
     abstract draw(): void;
 }

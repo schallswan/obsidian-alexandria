@@ -6,9 +6,9 @@ import {
     Setting,
     TextComponent
 } from "obsidian";
-import t from "src/l10n/locale";
+import t from "../l10n/locale";
 import { Icon } from "../../types";
-import type ObsidianLeaflet from "src/main";
+import type ObsidianLeaflet from "../main";
 import {
     findIconDefinition,
     getIcon,
@@ -207,10 +207,10 @@ export class CreateMarkerModal extends Modal {
                 const params =
                     this.tempMarker.layer && !this.data.defaultMarker.isImage
                         ? {
-                              transform: this.tempMarker.transform,
-                              mask: getIcon(this.data.defaultMarker.iconName),
-                              classes: ["full-width-height"]
-                          }
+                                transform: this.tempMarker.transform,
+                                mask: getIcon(this.data.defaultMarker.iconName),
+                                classes: ["full-width-height"]
+                            }
                         : { classes: ["full-width-height"] };
                 let node = getMarkerIcon(this.tempMarker, params)
                     .node as HTMLElement;

@@ -18,9 +18,9 @@ import {
     DistanceDisplay
 } from "../../types";
 
-import { GPX, Marker, GeoJSON, Overlay } from "src/layer";
+import { Marker, GeoJSON, Overlay } from "../layer";
 
-import { OverlayContextModal } from "src/modals/context";
+import { OverlayContextModal } from "../modals/context";
 
 import {
     copyToClipboard,
@@ -35,7 +35,7 @@ import {
     log,
     MODIFIER_KEY,
     TILE_SUBDOMAINS_SPILT
-} from "src/utils";
+} from "../utils";
 
 import { popup } from "./popup";
 
@@ -47,17 +47,17 @@ import {
 } from "../controls";
 
 import { LeafletSymbol } from "../utils/leaflet-import";
-import { gpxControl } from "src/controls/gpx";
-import { LeafletRenderer } from "src/renderer/renderer";
-import { mapViewControl, saveMapParametersControl } from "src/controls/mapview";
-import t from "src/l10n/locale";
+//import { gpxControl } from "../controls/gpx";
+import { LeafletRenderer } from "../renderer/renderer";
+import { mapViewControl, saveMapParametersControl } from "../controls/mapview";
+import t from "../l10n/locale";
 
-import { drawControl } from "src/draw/controls";
-import { DrawingController } from "src/draw/controller";
-import { ShapeProperties } from "src/draw/shape";
-import LayerControl from "src/controls/layers";
-import type { FilterMarkers } from "src/controls/filter";
-import { LockControl, lockControl } from "src/controls/lock";
+import { drawControl } from "../draw/controls";
+import { DrawingController } from "../draw/controller";
+import { ShapeProperties } from "../draw/shape";
+import LayerControl from "../controls/layers";
+import type { FilterMarkers } from "../controls/filter";
+import { LockControl, lockControl } from "../controls/lock";
 
 let L = window[LeafletSymbol];
 declare module "leaflet" {
@@ -95,17 +95,17 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
         alias?: string;
         note?: string;
     }[] = [];
-    gpxControl: ReturnType<typeof gpxControl>;
-    gpxData: { data: string; alias?: string }[] = [];
-    gpxIcons: {
-        start: string;
-        end: string;
-        waypoint: string;
-    } = {
-        start: null,
-        end: null,
-        waypoint: null
-    };
+    // gpxControl: ReturnType<typeof gpxControl>;
+    // gpxData: { data: string; alias?: string }[] = [];
+    // gpxIcons: {
+    //     start: string;
+    //     end: string;
+    //     waypoint: string;
+    // } = {
+    //     start: null,
+    //     end: null,
+    //     waypoint: null
+    // };
     imageOverlayData: {
         id: string;
         data: string;
@@ -188,8 +188,8 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
         });
         this.leafletInstance.createPane("base-layer");
         this.leafletInstance.createPane("geojson");
-        this.leafletInstance.createPane("gpx");
-        this.leafletInstance.createPane("gpx-canvas");
+        //this.leafletInstance.createPane("gpx");
+        //this.leafletInstance.createPane("gpx-canvas");
         this.leafletInstance.createPane("drawing");
         this.leafletInstance.createPane("drawing-markers");
 
@@ -199,10 +199,10 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
         this.readyForDrawings = true;
         this.trigger("ready-for-drawings");
 
-        //@ts-expect-error
-        this.canvas = L.Hotline.renderer({ pane: "gpx-canvas" }).addTo(
-            this.leafletInstance
-        );
+        // //@ts-expect-error
+        // this.canvas = L.Hotline.renderer({ pane: "gpx-canvas" }).addTo(
+        //     this.leafletInstance
+        // );
 
         /** Bind Map Events */
         this.leafletInstance.on("blur", () => {
@@ -231,7 +231,7 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
             this.leafletInstance.panTo(this.initialCoords);
 
             if (
-                (this.geojsonData.length || this.gpxData.length) &&
+                (this.geojsonData.length) &&
                 this.options.zoomFeatures
             ) {
                 this.log(`Zooming to features.`);
@@ -306,7 +306,7 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
     previousDistanceLines: L.Polyline[] = [];
     featureLayer: L.FeatureGroup;
     geojsonLayer: L.FeatureGroup;
-    gpxLayer: L.FeatureGroup;
+    //gpxLayer: L.FeatureGroup;
 
     get id() {
         return this.options.id;
@@ -599,43 +599,43 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
             );
         }
 
-        /** Add GPX to map */
-        if (this.gpxData.length > 0) {
-            added = 0;
-            this.addLayerControl();
-            this.log(`Adding ${this.gpxData.length} GPX features to map.`);
-            this.gpxLayer = L.featureGroup().addTo(this.featureLayer);
-            for (let { data, alias } of this.gpxData) {
-                try {
-                    const gpxInstance = new GPX(
-                        this as BaseMapType,
-                        data,
-                        this.gpxIcons
-                    );
-                    gpxInstance.show();
-                    gpxInstance.leafletInstance.addTo(this.gpxLayer);
-                    this.layerControl.addOverlay(
-                        gpxInstance.leafletInstance,
-                        alias ?? `GPX ${added + 1}`
-                    );
-                    added++;
-                } catch (e) {
-                    console.error(e);
-                    new Notice(
-                        t("There was an error adding GPX to map") +
-                            ` ${this.id}`
-                    );
-                    return;
-                }
-            }
+        // /** Add GPX to map */
+        // if (this.gpxData.length > 0) {
+        //     added = 0;
+        //     this.addLayerControl();
+        //     //his.log(`Adding ${this.gpxData.length} GPX features to map.`);
+        //     this.gpxLayer = L.featureGroup().addTo(this.featureLayer);
+        //     for (let { data, alias } of this.gpxData) {
+        //         try {
+        //             const gpxInstance = new GPX(
+        //                 this as BaseMapType,
+        //                 data,
+        //                 this.gpxIcons
+        //             );
+        //             gpxInstance.show();
+        //             gpxInstance.leafletInstance.addTo(this.gpxLayer);
+        //             this.layerControl.addOverlay(
+        //                 gpxInstance.leafletInstance,
+        //                 alias ?? `GPX ${added + 1}`
+        //             );
+        //             added++;
+        //         } catch (e) {
+        //             console.error(e);
+        //             new Notice(
+        //                 t("There was an error adding GPX to map") +
+        //                     ` ${this.id}`
+        //             );
+        //             return;
+        //         }
+        //     }
 
-            this.gpxControl = gpxControl(
-                { position: "bottomleft" },
-                this
-            ).addTo(this.leafletInstance);
-        }
+        //     this.gpxControl = gpxControl(
+        //         { position: "bottomleft" },
+        //         this
+        //     ).addTo(this.leafletInstance);
+        // }
 
-        if (this.geojsonData.length || this.gpxData.length) {
+        if (this.geojsonData.length) {
             if (this.options.zoomFeatures) {
                 this.log(`Zooming to features.`);
                 this.leafletInstance.fitBounds(this.featureLayer.getBounds());
@@ -1163,27 +1163,27 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
     }
     loadFeatureData(data: {
         geojsonData: { data: geojson.GeoJsonObject; alias?: string }[];
-        gpxData: { data: string; alias?: string }[];
-        gpxIcons: {
-            start: string;
-            end: string;
-            waypoint: string;
-        };
+        // gpxData: { data: string; alias?: string }[];
+        // gpxIcons: {
+        //     start: string;
+        //     end: string;
+        //     waypoint: string;
+        // };
     }) {
         this.geojsonData = [
             ...(this.geojsonData ?? []),
             ...(data.geojsonData ?? [])
         ];
-        this.gpxData = [...(this.gpxData ?? []), ...(data.gpxData ?? [])];
-        this.gpxIcons = {
-            ...{
-                start: null,
-                end: null,
-                waypoint: null
-            },
-            ...(this.gpxIcons ?? {}),
-            ...data.gpxIcons
-        };
+        // this.gpxData = [...(this.gpxData ?? []), ...(data.gpxData ?? [])];
+        // this.gpxIcons = {
+        //     ...{
+        //         start: null,
+        //         end: null,
+        //         waypoint: null
+        //     },
+        //     ...(this.gpxIcons ?? {}),
+        //     ...data.gpxIcons
+        // };
         /* this.addFeatures(); */
     }
     log(text: string) {

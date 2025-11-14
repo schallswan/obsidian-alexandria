@@ -1,16 +1,26 @@
 {
-    "compilerOptions": {
-        "baseUrl": ".",
-        "sourceMap": true,
-        "module": "esnext",
-        "target": "es6",
-        "allowJs": true,
-        "noImplicitAny": true,
-        "moduleResolution": "node",
-        "importHelpers": true,
-        "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true,
-        "lib": ["dom", "esnext", "scripthost", "es2019"]
-    },
-    "include": ["**/*.ts"]
+"compilerOptions": {
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "module": "Node16",
+    "target": "ES6",
+    "allowJs": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node16",
+    "importHelpers": true,
+    "isolatedModules": true,
+    "strictNullChecks": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": [
+    "DOM",
+    "ES5",
+    "ES6",
+    "ES7",
+    "es2019"
+    ]
+},
+"include": [
+    "**/*.ts"
+]
 }

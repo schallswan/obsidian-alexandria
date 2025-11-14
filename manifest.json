@@ -1,10 +1,10 @@
 {
-    "id": "obsidian-leaflet-plugin",
-    "name": "Leaflet",
+    "id": "obsidian-alexandria",
+    "name": "Alexandria",
     "description": "Interactive maps inside your notes",
     "version": "6.0.5",
     "minAppVersion": "0.12.12",
-    "author": "Jeremy Valentine",
-    "repo": "valentine195/obsidian-leaflet-plugin",
+    "author": "Sarah Hall-Swan",
+    "repo": "schallswan/obsidian-alexandria",
     "isDesktopOnly": false
 }

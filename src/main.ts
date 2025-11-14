@@ -1,7 +1,7 @@
-/* import "leaflet"; */
-import "../node_modules/leaflet/dist/leaflet.css";
-import "./assets/main.css";
-import { Creature } from "../../obsidian-initiative-tracker/src/utils/creature";
+import "leaflet";
+// import "../node_modules/leaflet/dist/leaflet.css";
+// import "./assets/main.css";
+// import { Creature } from "../../obsidian-initiative-tracker/src/utils/creature";
 
 import {
     Notice,
@@ -20,7 +20,7 @@ import { around } from "monkey-around";
 
 //Local Imports
 
-import { ObsidianLeafletSettingTab } from "./settings/settings";
+import { ObsidianAlexandriaSettingTab } from "./settings/settings";
 
 import {
     getIcon,
@@ -53,7 +53,7 @@ import {
 
 import { LeafletRenderer } from "./renderer/renderer";
 import { markerDivIcon } from "./map/divicon";
-import { InitiativeMapView } from "./initiative/initiative";
+// import { InitiativeMapView } from "./initiative/initiative";
 import t from "./l10n/locale";
 import { CreateMarkerModal } from "./modals";
 import { LeafletMapView } from "./map/view";
@@ -61,7 +61,7 @@ import { Length } from "convert/dist/types/units";
 
 //add commands to app interface
 
-import type { Plugins } from "../../obsidian-overload/index";
+// import type { Plugins } from "../../obsidian-overload/index";
 
 declare module "obsidian" {
     interface HoverPopover {
@@ -89,9 +89,9 @@ declare module "obsidian" {
     }
     interface App {
         //@ts-ignore
-        plugins: {
-            getPlugin<T extends keyof Plugins>(plugin: T): Plugins[T];
-        };
+        // plugins: {
+        //     getPlugin<T extends keyof Plugins>(plugin: T): Plugins[T];
+        // };
         internalPlugins: {
             plugins: InternalPlugins;
             getPluginById<T extends keyof InternalPlugins>(
@@ -134,7 +134,7 @@ declare module "obsidian" {
     }
 }
 
-export default class ObsidianLeaflet extends Plugin {
+export default class ObsidianAlexandria extends Plugin {
     data: ObsidianAppData;
     markerIcons: MarkerIcon[];
     maps: MapInterface[] = [];
@@ -155,14 +155,14 @@ export default class ObsidianLeaflet extends Plugin {
             return leaf.view;
     }
 
-    get initiativeView() {
-        const leaves = this.app.workspace.getLeavesOfType(
-            "INITIATIVE_TRACKER_MAP_VIEW"
-        );
-        const leaf = leaves.length ? leaves[0] : null;
-        if (leaf && leaf.view && leaf.view instanceof InitiativeMapView)
-            return leaf.view;
-    }
+    // get initiativeView() {
+    //     const leaves = this.app.workspace.getLeavesOfType(
+    //         "INITIATIVE_TRACKER_MAP_VIEW"
+    //     );
+    //     const leaf = leaves.length ? leaves[0] : null;
+    //     if (leaf && leaf.view && leaf.view instanceof InitiativeMapView)
+    //         return leaf.view;
+    // }
 
     get defaultUnit() {
         if (this.data.defaultUnitType === "imperial") return "mi";
@@ -231,22 +231,22 @@ export default class ObsidianLeaflet extends Plugin {
                 defaultMod: false
             });
             //@ts-ignore
-            if (this.app.plugins.getPlugin("initiative-tracker")) {
-                this.registerView(
-                    "INITIATIVE_TRACKER_MAP_VIEW",
-                    (leaf: WorkspaceLeaf) => {
-                        return new InitiativeMapView(leaf, this);
-                    }
-                );
-            }
+            // if (this.app.plugins.getPlugin("initiative-tracker")) {
+            //     this.registerView(
+            //         "INITIATIVE_TRACKER_MAP_VIEW",
+            //         (leaf: WorkspaceLeaf) => {
+            //             return new InitiativeMapView(leaf, this);
+            //         }
+            //     );
+            // }
 
-            this.registerEvent(
-                this.app.workspace.on("initiative-tracker:unload", () => {
-                    if (this.initiativeView) {
-                        this.initiativeView.leaf.detach();
-                    }
-                })
-            );
+            // this.registerEvent(
+            //     this.app.workspace.on("initiative-tracker:unload", () => {
+            //         if (this.initiativeView) {
+            //             this.initiativeView.leaf.detach();
+            //         }
+            //     })
+            // );
         });
 
         this.markerIcons = this.generateMarkerMarkup(this.data.markerIcons);
@@ -255,7 +255,7 @@ export default class ObsidianLeaflet extends Plugin {
             this.postprocessor.bind(this)
         );
 
-        this.addSettingTab(new ObsidianLeafletSettingTab(this.app, this));
+        this.addSettingTab(new ObsidianAlexandriaSettingTab(this.app, this));
     }
     patchLinkHover() {
         const plugin = this;
@@ -304,9 +304,9 @@ export default class ObsidianLeaflet extends Plugin {
             this.view.leaf.detach();
         }
 
-        if (this.initiativeView) {
-            this.initiativeView.leaf.detach();
-        }
+        // if (this.initiativeView) {
+        //     this.initiativeView.leaf.detach();
+        // }
 
         this.maps = [];
     }
@@ -769,28 +769,28 @@ export default class ObsidianLeaflet extends Plugin {
         });
     }
 
-    public async openInitiativeView(
-        players?: Creature[],
-        creatures?: Creature[]
-    ) {
-        if (!this.initiativeView) {
-            const bool = this.app.workspace
-                .getLayout()
-                .main.children.filter((c: any) => c?.state?.type != "empty");
+    // public async openInitiativeView(
+    //     players?: Creature[],
+    //     creatures?: Creature[]
+    // ) {
+    //     if (!this.initiativeView) {
+    //         const bool = this.app.workspace
+    //             .getLayout()
+    //             .main.children.filter((c: any) => c?.state?.type != "empty");
 
-            const leaf = this.app.workspace.getLeaf(bool.length > 0);
+    //         const leaf = this.app.workspace.getLeaf(bool.length > 0);
 
-            await leaf.open(
-                new InitiativeMapView(leaf, this, players, creatures)
-            );
-        } else {
-            this.initiativeView.addPlayers(...players);
-            this.initiativeView.addCreatures(...creatures);
-        }
+    //         await leaf.open(
+    //             new InitiativeMapView(leaf, this, players, creatures)
+    //         );
+    //     } else {
+    //         this.initiativeView.addPlayers(...players);
+    //         this.initiativeView.addCreatures(...creatures);
+    //     }
 
-        if (!this.initiativeView) {
-            new Notice("There was an error opening the initiative map view.");
-            return;
-        }
-    }
+    //     if (!this.initiativeView) {
+    //         new Notice("There was an error opening the initiative map view.");
+    //         return;
+    //     }
+    // }
 }

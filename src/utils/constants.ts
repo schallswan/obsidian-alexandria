@@ -1,5 +1,5 @@
 import { Platform } from "obsidian";
-import { BlockParameters, LeafletMapOptions, ObsidianAppData } from "../types";
+import { BlockParameters, LeafletMapOptions, ObsidianAppData } from "../../types";
 
 export const OBSIDIAN_LEAFLET_POPOVER_SOURCE = "obsidian-leaflet";
 
@@ -67,8 +67,10 @@ export const DEFAULT_MAP_OPTIONS: LeafletMapOptions = {
     darkMode: false,
     overlayColor: "blue",
     osmLayer: true,
-    isMapView: false
+    isMapView: false,
+    tileSubdomains: []
 };
+
 export const DEFAULT_SETTINGS: ObsidianAppData = {
     mapMarkers: [],
     defaultMarker: {
@@ -1085,7 +1087,7 @@ export const LEAFLET_PROVIDERS = {
                 [1.16, 103.502]
             ],
             attribution:
-                '<img src="https://docs.onemap.sg/maps/images/oneMap64-01.png" style="height:20px;width:20px;"/> New OneMap | Map data &copy; contributors, <a href="http://SLA.gov.sg">Singapore Land Authority</a>'
+                '<img ..="https://docs.onemap.sg/maps/images/oneMap64-01.png" style="height:20px;width:20px;"/> New OneMap | Map data &copy; contributors, <a href="http://SLA.gov.sg">Singapore Land Authority</a>'
         },
         variants: {
             Default: "Default",

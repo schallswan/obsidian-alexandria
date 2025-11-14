@@ -1,8 +1,8 @@
 import { App, Events, Notice } from "obsidian";
 
 import { parseLink } from "../utils";
-import { ImageLayerData } from "../types";
-import t from "src/l10n/locale";
+import { ImageLayerData } from "../../types";
+import t from "../l10n/locale";
 
 export default class Loader extends Events {
     constructor(public app: App) {

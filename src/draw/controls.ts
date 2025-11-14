@@ -1,11 +1,11 @@
-import { BaseMapType } from "../types";
+import { BaseMapType } from "../../types";
 import {
     FontAwesomeControl,
     FontAwesomeControlOptions
-} from "src/controls/controls";
-import t from "src/l10n/locale";
+} from "../controls/controls";
+import t from "../l10n/locale";
 
-import { LeafletSymbol } from "src/utils/leaflet-import";
+import { LeafletSymbol } from "../utils/leaflet-import";
 import { BaseDrawControl } from "./base";
 import { ColorControl } from "./color";
 import { GeoJSONControl } from "./geojson";
@@ -64,7 +64,7 @@ export class DrawControl extends FontAwesomeControl {
 
         this.iconEl.dataset["draggable"] = "false";
 
-        this.map.on("click", this.collapse, this);
+        this.map.on("click", this.collapse);
 
         L.DomEvent.on(this.controlEl, "click", () => this.expand());
     }

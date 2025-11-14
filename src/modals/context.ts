@@ -14,14 +14,14 @@ import {
     getGroupSeparator,
     removeValidationError,
     setValidationError
-} from "src/utils";
+} from "../utils";
 
-import { UNIT_NAME_ALIASES } from "src/utils";
+import { UNIT_NAME_ALIASES } from "../utils";
 
-import { Overlay } from "src/layer";
+import { Overlay } from "../layer";
 
-import { formatNumber } from "src/utils";
-import t from "src/l10n/locale";
+import { formatNumber } from "../utils";
+import t from "../l10n/locale";
 
 const locale = window.moment.locale;
 

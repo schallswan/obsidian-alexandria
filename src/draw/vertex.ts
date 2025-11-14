@@ -1,9 +1,9 @@
 import { LatLng } from "leaflet";
 import { Events } from "obsidian";
-import { Marker } from "src/layer";
-import { MarkerDivIcon } from "src/map";
-import { getId } from "src/utils";
-import { LeafletSymbol } from "src/utils/leaflet-import";
+import { Marker } from "../layer";
+import { MarkerDivIcon } from "../map";
+import { getId } from "../utils";
+import { LeafletSymbol } from "../utils/leaflet-import";
 import { Shape } from "./shape";
 const L = window[LeafletSymbol];
 

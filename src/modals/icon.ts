@@ -1,5 +1,5 @@
 import { TextComponent, App, FuzzyMatch } from "obsidian";
-import { findIconDefinition, icon, IconName } from "src/utils";
+import { findIconDefinition, icon, IconName } from "../utils";
 import { SuggestionModal } from "./suggester";
 
 export class IconSuggestionModal extends SuggestionModal<IconName> {

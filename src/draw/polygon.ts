@@ -1,7 +1,7 @@
-import { BaseMapType } from "../types";
-import t from "src/l10n/locale";
-import { Marker } from "src/layer";
-import { LeafletSymbol } from "src/utils/leaflet-import";
+import { BaseMapType } from "../../types";
+import t from "../l10n/locale";
+import { Marker } from "../layer";
+import { LeafletSymbol } from "../utils/leaflet-import";
 import { BaseDrawControl } from "./base";
 import { DrawControl } from "./controls";
 import { Shape } from "./shape";

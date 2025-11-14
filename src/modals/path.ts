@@ -9,7 +9,7 @@ import {
     App,
     TFolder
 } from "obsidian";
-import t from "src/l10n/locale";
+import t from "../l10n/locale";
 
 export class PathSuggestionModal extends SuggestionModal<
     TFile | BlockCache | HeadingCache

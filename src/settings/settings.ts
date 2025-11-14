@@ -21,18 +21,18 @@ import {
     DEFAULT_TILE_SERVER,
     DEFAULT_ATTRIBUTION,
     DEFAULT_TILE_SUBDOMAINS
-} from "src/utils";
-import { IconSuggestionModal } from "src/modals";
+} from "../utils";
+import { IconSuggestionModal } from "../modals";
 
-import { FolderSuggestionModal } from "src/modals/path";
-import type ObsidianLeaflet from "src/main";
-import t from "src/l10n/locale";
-import { TooltipDisplay, SavedMarkerProperties, MapMarkerData } from "types";
+import { FolderSuggestionModal } from "../modals/path";
+import type ObsidianAlexandria from "../main";
+import t from "../l10n/locale";
+import { TooltipDisplay, SavedMarkerProperties, MapMarkerData } from "../../types";
 
-export class ObsidianLeafletSettingTab extends PluginSettingTab {
-    plugin: ObsidianLeaflet;
+export class ObsidianAlexandriaSettingTab extends PluginSettingTab {
+    plugin: ObsidianAlexandria;
 
-    constructor(app: App, plugin: ObsidianLeaflet) {
+    constructor(app: App, plugin: ObsidianAlexandria) {
         super(app, plugin);
         this.plugin = plugin;
     }
@@ -44,7 +44,7 @@ export class ObsidianLeafletSettingTab extends PluginSettingTab {
 
         containerEl.empty();
 
-        containerEl.addClass("obsidian-leaflet-settings");
+        containerEl.addClass("obsidian-alexandria-settings");
 
         containerEl.createEl("h2", { text: t("Obsidian Leaflet Settings") });
 

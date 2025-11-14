@@ -1,5 +1,5 @@
 /** Settings Interfaces */
-import { ShapeProperties } from "src/draw/shape";
+import { ShapeProperties } from "../src/draw/shape";
 import { BlockParameters, SavedMarkerProperties, SavedOverlayData } from ".";
 
 export type TooltipDisplay = "always" | "hover" | "never";

@@ -5,9 +5,9 @@ import {
     Notice,
     TextAreaComponent
 } from "obsidian";
-import type ObsidianLeaflet from "src/main";
+import type ObsidianLeaflet from "../main";
 
-import t from "src/l10n/locale";
+import t from "../l10n/locale";
 
 export class EditParametersModal extends Modal {
     constructor(private plugin: ObsidianLeaflet) {

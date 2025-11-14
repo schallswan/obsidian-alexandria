@@ -1,5 +1,5 @@
-import { FontAwesomeControl } from "src/controls/controls";
-import t from "src/l10n/locale";
+import { FontAwesomeControl } from "../controls/controls";
+import t from "../l10n/locale";
 import { BaseDrawControl } from "./base";
 import { DrawControl } from "./controls";
 

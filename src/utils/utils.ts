@@ -8,10 +8,10 @@ import {
 } from "obsidian";
 import Color from "color";
 
-import { BaseMapType, BlockParameters } from "../types";
+import { BaseMapType, BlockParameters } from "../../types";
 import { LAT_LONG_DECIMALS } from "./constants";
 import { DESCRIPTION_ICON } from ".";
-import t from "src/l10n/locale";
+import t from "../l10n/locale";
 
 const locale = window.moment.locale;
 
@@ -237,13 +237,14 @@ export function getParamsFromSource(source: string): BlockParameters {
 
     /** Pull out links */
 
-    const links = source.match(/(?:\[.*\]\(|\[\[)[^\[\]]*(?:\)|\]\])/g) ?? [];
+    const links = source.match(/(?:\[.*\]\(|\[\[)[^\[\]]*(?:\)|\]\])/g) ?? null;
     for (let link of links) {
         source = source.replace(
             link,
             `LEAFLET_INTERNAL_LINK_${links.indexOf(link)}`
         );
     }
+
 
     /** Pull out tags */
     try {

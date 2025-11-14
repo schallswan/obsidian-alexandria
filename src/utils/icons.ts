@@ -10,7 +10,7 @@ import type {
     IconDefinition,
     IconName
 } from "@fortawesome/fontawesome-svg-core";
-import { Icon } from "../types";
+import { Icon } from "../../types";
 
 library.add(fas);
 

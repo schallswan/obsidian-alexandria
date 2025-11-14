@@ -8,15 +8,15 @@ import type {
     SavedMarkerProperties,
     BaseMapType
 } from "../../types";
-import { MarkerContextModal } from "src/modals";
-import { divIconMarker, markerDivIcon } from "src/map";
+import { MarkerContextModal } from "../modals";
+import { divIconMarker, markerDivIcon } from "../map";
 import { Layer } from "../layer/layer";
-import { popup } from "src/map/popup";
-import { MODIFIER_KEY, OBSIDIAN_LEAFLET_POPOVER_SOURCE } from "src/utils";
-import { copyToClipboard, formatLatLng } from "src/utils";
+import { popup } from "../map/popup";
+import { MODIFIER_KEY, OBSIDIAN_LEAFLET_POPOVER_SOURCE } from "../utils";
+import { copyToClipboard, formatLatLng } from "../utils";
 
 import { LeafletSymbol } from "../utils/leaflet-import";
-import t from "src/l10n/locale";
+import t from "../l10n/locale";
 let L = window[LeafletSymbol];
 
 abstract class MarkerTarget {

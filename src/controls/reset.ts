@@ -1,6 +1,6 @@
 import { Map } from "leaflet";
-import { BaseMapType } from "../types";
-import t from "src/l10n/locale";
+import { BaseMapType } from "../../types";
+import t from "../l10n/locale";
 import { FontAwesomeControl, FontAwesomeControlOptions } from "./controls";
 
 class ResetZoomControl extends FontAwesomeControl {

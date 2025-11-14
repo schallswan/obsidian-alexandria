@@ -7,14 +7,14 @@ import type { MarkerIcon, SavedMarkerProperties, SavedOverlayData } from ".";
 
 import type { Marker } from ".";
 import type { ObsidianAppData, TooltipDisplay } from "./saved";
-import type { Overlay } from "src/layer";
-import type { Layer } from "src/layer/layer";
-import type { GPXControl } from "./controls";
-import type { LeafletRenderer } from "src/renderer/renderer";
-import { DrawingController } from "src/draw/controller";
-import { ShapeProperties } from "src/draw/shape";
+import type { Overlay } from "../src/layer";
+import type { Layer } from "../src/layer/layer";
+// import type { GPXControl } from "./controls";
+import type { LeafletRenderer } from "../src/renderer/renderer";
+import { DrawingController } from "../src/draw/controller";
+import { ShapeProperties } from "../src/draw/shape";
 import type geojson from "geojson";
-import type ObsidianLeaflet from "src/main";
+import type ObsidianLeaflet from "../src/main";
 
 export interface ImageLayerData {
     data: string;
@@ -66,7 +66,7 @@ export interface LeafletMapOptions {
     drawColor?: string;
 
     geojsonColor?: string;
-    gpxColor?: string;
+    // gpxColor?: string;
 
     localMarkerTypes?: MarkerIcon[];
 
@@ -179,14 +179,6 @@ declare abstract class BaseMap /* <
 
     geojsonData: any[];
 
-    gpxControl: GPXControl;
-    gpxLayer: L.FeatureGroup;
-    gpxData: { data: string; alias?: string }[];
-    gpxIcons: {
-        start: string;
-        end: string;
-        waypoint: string;
-    };
 
     get id(): string;
 
@@ -271,12 +263,6 @@ declare abstract class BaseMap /* <
 
     loadFeatureData(data: {
         geojsonData: { data: geojson.GeoJsonObject; alias?: string }[];
-        gpxData: { data: string; alias?: string }[];
-        gpxIcons: {
-            start: string;
-            end: string;
-            waypoint: string;
-        };
     }): void;
 
     log(text: string): void;
@@ -308,7 +294,7 @@ declare abstract class BaseMap /* <
         name: "create-immutable-layer",
         callback: (layer: Marker | Overlay) => Promise<void>
     ): EventRef;
-    on(name: "should-save", callback: () => Promise<void>): EventRef;
+    on(name: "should-save", callback: () => void): EventRef;
     on(name: "marker-added", callback: (marker: Marker) => void): EventRef;
     on(name: "marker-dragging", callback: (marker: Marker) => void): EventRef;
     on(
@@ -319,9 +305,10 @@ declare abstract class BaseMap /* <
     on(name: "marker-deleted", callback: (marker: Marker) => void): EventRef;
     on(name: "markers-updated", callback: () => void): EventRef;
     on(name: "should-close-popup", callback: (source: Popup) => void): EventRef;
-    on(name: "should-save", callback: () => void): EventRef;
+    on(name: "should-sagpxve", callback: () => void): EventRef;
     on(name: "lock", callback: () => void): EventRef;
     on(name: "ready-for-drawings", callback: () => void): EventRef;
+    on(name: "click", callback: () => void): EventRef;
 }
 
 declare class RealMap extends BaseMap /* <L.TileLayer> */ {

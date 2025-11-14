@@ -1,12 +1,12 @@
 import convert from "convert";
 import { Notice } from "obsidian";
 
-import { BaseMapType, SavedOverlayData } from "../types";
-import t from "src/l10n/locale";
-import { popup } from "src/map/popup";
-import { formatLatLng, formatNumber } from "src/utils";
-import { DISTANCE_DECIMALS, MODIFIER_KEY } from "src/utils";
-import { LeafletSymbol } from "src/utils/leaflet-import";
+import { BaseMapType, SavedOverlayData } from "../../types";
+import t from "../l10n/locale";
+import { popup } from "../map/popup";
+import { formatLatLng, formatNumber } from "../utils";
+import { DISTANCE_DECIMALS, MODIFIER_KEY } from "../utils";
+import { LeafletSymbol } from "../utils/leaflet-import";
 import { Layer } from "../layer/layer";
 
 let L = window[LeafletSymbol];

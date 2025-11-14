@@ -1,14 +1,14 @@
-import { FontAwesomeControl } from "src/controls/controls";
-import t from "src/l10n/locale";
-import { Marker } from "src/layer";
-import { MODIFIER_KEY, getId } from "src/utils";
-import { LeafletSymbol } from "src/utils/leaflet-import";
+import { FontAwesomeControl } from "../controls/controls";
+import t from "../l10n/locale";
+import { Marker } from "../layer";
+import { MODIFIER_KEY, getId } from "../utils";
+import { LeafletSymbol } from "../utils/leaflet-import";
 import { BaseDrawControl } from "./base";
 import { DrawingController } from "./controller";
 import { DrawControl } from "./controls";
 import { Shape, ShapeProperties } from "./shape";
 import { Vertex, VertexProperties } from "./vertex";
-import { popup } from "src/map";
+import { popup } from "../map";
 import { Notice } from "obsidian";
 
 const L = window[LeafletSymbol];

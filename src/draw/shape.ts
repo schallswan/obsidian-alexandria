@@ -1,9 +1,9 @@
-import { Layer } from "src/layer/layer";
+import { Layer } from "../layer/layer";
 import { DrawingController } from "./controller";
 import { Vertex, VertexProperties } from "./vertex";
-import { Marker } from "src/layer";
+import { Marker } from "../layer";
 
-import { LeafletSymbol } from "src/utils/leaflet-import";
+import { LeafletSymbol } from "../utils/leaflet-import";
 import { Polyline } from "./polyline";
 
 const L = window[LeafletSymbol];

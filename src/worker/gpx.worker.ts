@@ -1,5 +1,5 @@
-import { GPX_OPTIONS, GPX_Data, Coordinate } from "../types/gpx";
-import { DOMParser } from "xmldom";
+import { GPX_OPTIONS, GPX_Data, Coordinate } from "../../types/gpx";
+import { DOMParser } from "@xmldom/xmldom";
 
 const ctx: Worker = self as any;
 
@@ -345,9 +345,9 @@ class GPXParser {
             const time_diff =
                 last != null
                     ? Math.abs(
-                          ll.meta.time?.valueOf() ??
-                              0 - last.meta.time?.valueOf()
-                      ) ?? null
+                        ll.meta.time?.valueOf() ??
+                            0 - last.meta.time?.valueOf()
+                    ) ?? null
                     : null;
 
             const eleEl = el[i].getElementsByTagName("ele");

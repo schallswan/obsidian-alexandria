@@ -1,7 +1,7 @@
 import { LatLng } from "leaflet";
-import { Marker } from "src/layer/marker";
-import t from "src/l10n/locale";
-import { LeafletSymbol } from "src/utils/leaflet-import";
+import { Marker } from "../layer/marker";
+import t from "../l10n/locale";
+import { LeafletSymbol } from "../utils/leaflet-import";
 import { BaseDrawControl } from "./base";
 import { DrawControl } from "./controls";
 import { Shape } from "./shape";

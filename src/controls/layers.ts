@@ -1,6 +1,6 @@
-import { icon } from "src/utils";
-import { LeafletSymbol } from "src/utils/leaflet-import";
-import type { GPX } from "src/layer";
+import { icon } from "../utils";
+import { LeafletSymbol } from "../utils/leaflet-import";
+// import type { GPX } from "../layer";
 import type { GeoJSON } from "../layer/geojson";
 
 const L = window[LeafletSymbol];
@@ -33,5 +33,5 @@ export default class LayerControl extends L.Control.Layers {
             this.container.appendChild(this._separator.cloneNode(true));
         }
     }
-    addGPX(layer: GPX) {}
+    // addGPX(layer: GPX) {}
 }

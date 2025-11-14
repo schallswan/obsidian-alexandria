@@ -30,10 +30,10 @@ export interface SavedMarkerProperties {
     type:
         | string
         | {
-              icon: string;
-              color: string;
-              layer: boolean;
-          };
+            icon: string;
+            color: string;
+            layer: boolean;
+        };
     loc: [number, number];
     percent: [number, number];
     id: string;

@@ -1,8 +1,8 @@
-import { BaseMapType } from "../types";
+import { BaseMapType } from "../../types";
 import { FontAwesomeControl, FontAwesomeControlOptions } from "./controls";
 
-import { LeafletSymbol } from "src/utils/leaflet-import";
-import t from "src/l10n/locale";
+import { LeafletSymbol } from "../utils/leaflet-import";
+import t from "../l10n/locale";
 const L = window[LeafletSymbol];
 
 class ZoomControl extends FontAwesomeControl {

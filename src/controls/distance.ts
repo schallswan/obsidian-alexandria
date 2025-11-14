@@ -1,8 +1,8 @@
-import { BaseMapType, Popup } from "../types";
-import { popup } from "src/map/popup";
-import { LAT_LONG_DECIMALS } from "src/utils";
+import { BaseMapType, Popup } from "../../types";
+import { popup } from "../map/popup";
+import { LAT_LONG_DECIMALS } from "../utils";
 
-import { LeafletSymbol } from "src/utils/leaflet-import";
+import { LeafletSymbol } from "../utils/leaflet-import";
 
 const L = window[LeafletSymbol];
 

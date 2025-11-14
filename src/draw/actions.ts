@@ -1,4 +1,4 @@
-import { FontAwesomeControl } from "src/controls/controls";
+import { FontAwesomeControl } from "../controls/controls";
 import { BaseDrawControl } from "./base";
 
 export class CompleteControl extends FontAwesomeControl {

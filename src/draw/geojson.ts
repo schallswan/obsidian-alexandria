@@ -1,9 +1,9 @@
-import t from "src/l10n/locale";
-import { BaseMapType } from "../types";
+import t from "../l10n/locale";
+import { BaseMapType } from "../../types";
 import { DrawControl } from "./controls";
-import { FontAwesomeControl, FontAwesomeControlOptions } from "src/controls/controls";
+import { FontAwesomeControl, FontAwesomeControlOptions } from "../controls/controls";
 import { LayerGroup, Polyline } from "leaflet";
-import { GeoJSONModal } from "src/modals/geojson";
+import { GeoJSONModal } from "../modals/geojson";
 
 export class GeoJSONControl extends FontAwesomeControl {
     get map() {
@@ -23,9 +23,7 @@ export class GeoJSONControl extends FontAwesomeControl {
         evt.stopPropagation();
 
         const { plugin } = this.map;
-        
         const features: Array<Polyline> = [];
-        
         this.map.controller.flatShapes.forEach(shape => {
             if (shape.leafletInstance instanceof Polyline) {
                 features.push(shape.leafletInstance);

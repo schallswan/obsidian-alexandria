@@ -1,4 +1,4 @@
-import type { BaseMapType } from "../types";
+import type { BaseMapType } from "../../types";
 import type geojson from "geojson";
 
 import { Marker } from "./marker";
@@ -8,11 +8,11 @@ import {
     MAP_OVERLAY_STROKE_OPACITY,
     MAP_OVERLAY_STROKE_WIDTH,
     MODIFIER_KEY
-} from "src/utils";
-import { LeafletSymbol } from "src/utils/leaflet-import";
+} from "../utils";
+import { LeafletSymbol } from "../utils/leaflet-import";
 import { Layer } from "./layer";
-import { formatLatLng } from "src/utils";
-import { popup } from "src/map/popup";
+import { formatLatLng } from "../utils";
+import { popup } from "../map/popup";
 import { LeafletMouseEvent } from "leaflet";
 import { setIcon } from "obsidian";
 let L = window[LeafletSymbol];

@@ -1,7 +1,7 @@
-import type { BaseMapType, LeafletOverlay, TooltipDisplay } from "../types";
-import { Marker, Overlay } from "src/layer";
-import { Layer } from "src/layer/layer";
-import { BASE_POPUP_OPTIONS } from "src/utils";
+import type { BaseMapType, LeafletOverlay, TooltipDisplay } from "../../types";
+import { Marker, Overlay } from "../layer";
+import { Layer } from "../layer/layer";
+import { BASE_POPUP_OPTIONS } from "../utils";
 import { LeafletSymbol } from "../utils/leaflet-import";
 let L = window[LeafletSymbol];
 
@@ -29,7 +29,7 @@ class Popup {
         });
     }
     private canShowTooltip(
-        target: Marker | LeafletOverlay,
+        target: Layer<any> | L.Marker | L.LatLng | L.Polyline, //Marker | LeafletOverlay,
         tooltip?: TooltipDisplay
     ) {
         const global =
@@ -72,12 +72,14 @@ class Popup {
                 .off("mouseenter", this.onMouseOver);
         }
 
-        this.leafletInstance
-            .getElement()
-            .removeEventListener("mouseenter", this.onMouseOver);
-        this.leafletInstance
-            .getElement()
-            .removeEventListener("mouseleave", this.onMouseOut);
+        let tmpInstance = this.leafletInstance.getElement()
+        if (tmpInstance) {
+            tmpInstance.removeEventListener("mouseenter", this.onMouseOver);
+        }
+        tmpInstance = this.leafletInstance.getElement()
+        if (tmpInstance) {
+            tmpInstance.removeEventListener("mouseleave", this.onMouseOut);
+        }
 
         this.map.leafletInstance.off("zoom", this.onZoomAnim);
         if (this.options.permanent) return;
@@ -104,7 +106,7 @@ class Popup {
         content: ((source: L.Layer) => L.Content) | L.Content,
         handler?: L.Layer
     ) {
-        if ("tooltip" in this.target && !this.canShowTooltip(this.target))
+        if (("tooltip" in this.target) && !this.canShowTooltip(this.target))
             return;
 
         if (!this.leafletInstance) this.leafletInstance = this.getPopup();

@@ -1,4 +1,4 @@
-import t from "src/l10n/locale";
+import t from "../l10n/locale";
 
 export const UNIT_NAME_ALIASES = {
     meter: t("meters"),

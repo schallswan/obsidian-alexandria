@@ -20,7 +20,7 @@ import type {
     SavedMarkerProperties,
     SavedOverlayData
 } from "../../types";
-import type ObsidianLeaflet from "src/main";
+import type ObsidianLeaflet from "../main";
 import type { BaseMapType, ImageLayerData } from "../../types/map";
 
 import Watcher from "../utils/watcher";
@@ -40,8 +40,8 @@ import {
 } from "../utils";
 import convert from "convert";
 import t from "../l10n/locale";
-import { LeafletMapView } from "src/map/view";
-import { Marker, Overlay } from "src/layer";
+import { LeafletMapView } from "../map/view";
+import { Marker, Overlay } from "../layer";
 import { promisify } from "util";
 
 declare module "leaflet" {
@@ -147,7 +147,7 @@ export class LeafletRenderer extends MarkdownRenderChild {
             draw: this.params.draw ?? this.plugin.data.enableDraw,
             drawColor: getHex(this.params.drawColor),
             geojsonColor: getHex(this.params.geojsonColor),
-            gpxColor: getHex(this.params.gpxColor),
+            // gpxColor: getHex(this.params.gpxColor),
             hasAdditional,
             height: this.getHeight(this.params.height),
             id: this.params.id,
@@ -562,77 +562,77 @@ export class LeafletRenderer extends MarkdownRenderChild {
         //this does NOT help though for parallel, large-scale Structures like Subway-Networks.
         //These must be added manually to avoid Overlay!
 
-        let gpx = this.params.gpx,
-            gpxData: { data: string; alias?: string }[] = [];
-        let gpxIcons: {
-            start: string;
-            end: string;
-            waypoint: string;
-        } = {
-            ...{ start: null, end: null, waypoint: null },
-            ...this.params.gpxMarkers
-        };
-        if (!(gpx instanceof Array)) {
-            gpx = [gpx];
-        }
+        // let gpx = this.params.gpx,
+        //     gpxData: { data: string; alias?: string }[] = [];
+        // let gpxIcons: {
+        //     start: string;
+        //     end: string;
+        //     waypoint: string;
+        // } = {
+        //     ...{ start: null, end: null, waypoint: null },
+        //     ...this.params.gpxMarkers
+        // };
+        // if (!(gpx instanceof Array)) {
+        //     gpx = [gpx];
+        // }
 
-        let gpxSet: Map<string, { path: string; alias?: string }> = new Map(
-            gpx
-                ?.flat(Infinity)
-                .filter((g) => g)
-                .map((g) => {
-                    let [path, alias = path] = g
-                        .replace(/(\[|\])/g, "")
-                        .split("|");
-                    if (!alias?.length) alias = path;
-                    return [path, { path, alias }];
-                })
-        );
-        if (this.params.gpxFolder && this.params.gpxFolder.length) {
-            for (let path of this.params.gpxFolder) {
-                let abstractFile =
-                    this.plugin.app.vault.getAbstractFileByPath(path);
-                if (!abstractFile) continue;
-                if (
-                    abstractFile instanceof TFile &&
-                    abstractFile.extension === "gpx"
-                )
-                    gpxSet.set(path, { path });
-                if (abstractFile instanceof TFolder) {
-                    Vault.recurseChildren(abstractFile, (file) => {
-                        if (
-                            file instanceof TFile &&
-                            (file.extension === "gpx" ||
-                                file.path.endsWith(".gpx.gz"))
-                        )
-                            gpxSet.set(file.path, { path: file.path });
-                    });
-                }
-            }
-        }
-        if (gpxSet.size) {
-            this.map.log("Loading GPX files.");
-            for (let { path, alias } of [...gpxSet.values()]) {
-                const file = this.plugin.app.metadataCache.getFirstLinkpathDest(
-                    parseLink(path),
-                    this.sourcePath
-                );
-                if (file && file instanceof TFile) {
-                    let data: string;
-                    if (file.extension === "gz") {
-                        let dataBuffer = await this.plugin.app.vault.readBinary(
-                            file
-                        );
-                        data = ungzip(dataBuffer, { to: "string" });
-                    } else {
-                        data = await this.plugin.app.vault.read(file);
-                    }
-                    gpxData.push({ data, alias });
-                }
-            }
-        }
+        // let gpxSet: Map<string, { path: string; alias?: string }> = new Map(
+        //     gpx
+        //         ?.flat(Infinity)
+        //         .filter((g) => g)
+        //         .map((g) => {
+        //             let [path, alias = path] = g
+        //                 .replace(/(\[|\])/g, "")
+        //                 .split("|");
+        //             if (!alias?.length) alias = path;
+        //             return [path, { path, alias }];
+        //         })
+        // );
+        // if (this.params.gpxFolder && this.params.gpxFolder.length) {
+        //     for (let path of this.params.gpxFolder) {
+        //         let abstractFile =
+        //             this.plugin.app.vault.getAbstractFileByPath(path);
+        //         if (!abstractFile) continue;
+        //         if (
+        //             abstractFile instanceof TFile &&
+        //             abstractFile.extension === "gpx"
+        //         )
+        //             gpxSet.set(path, { path });
+        //         if (abstractFile instanceof TFolder) {
+        //             Vault.recurseChildren(abstractFile, (file) => {
+        //                 if (
+        //                     file instanceof TFile &&
+        //                     (file.extension === "gpx" ||
+        //                         file.path.endsWith(".gpx.gz"))
+        //                 )
+        //                     gpxSet.set(file.path, { path: file.path });
+        //             });
+        //         }
+        //     }
+        // }
+        // if (gpxSet.size) {
+        //     this.map.log("Loading GPX files.");
+        //     for (let { path, alias } of [...gpxSet.values()]) {
+        //         const file = this.plugin.app.metadataCache.getFirstLinkpathDest(
+        //             parseLink(path),
+        //             this.sourcePath
+        //         );
+        //         if (file && file instanceof TFile) {
+        //             let data: string;
+        //             if (file.extension === "gz") {
+        //                 let dataBuffer = await this.plugin.app.vault.readBinary(
+        //                     file
+        //                 );
+        //                 data = ungzip(dataBuffer, { to: "string" });
+        //             } else {
+        //                 data = await this.plugin.app.vault.read(file);
+        //             }
+        //             gpxData.push({ data, alias });
+        //         }
+        //     }
+        // }
 
-        this.map.loadFeatureData({ geojsonData, gpxData, gpxIcons });
+        this.map.loadFeatureData({ geojsonData});
     }
 
     loadSavedData() {

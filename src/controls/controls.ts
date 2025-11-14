@@ -1,6 +1,6 @@
 import { icon } from "../utils/icons";
 import { IconName } from "@fortawesome/free-solid-svg-icons";
-import { LeafletSymbol } from "src/utils/leaflet-import";
+import { LeafletSymbol } from "../utils/leaflet-import";
 import { Events } from "obsidian";
 
 const L = window[LeafletSymbol];
@@ -14,7 +14,7 @@ export abstract class FontAwesomeControl extends L.Control {
     icon: IconName;
     controlEl: HTMLElement;
     cls: string;
-    tooltip: string;
+    tooltip: string | null;
     leafletInstance: L.Map;
     enabled: boolean = true;
     iconEl: HTMLAnchorElement;
@@ -23,7 +23,11 @@ export abstract class FontAwesomeControl extends L.Control {
         this.leafletInstance = leafletMap;
         this.icon = opts.icon;
         this.cls = opts.cls;
-        this.tooltip = opts.tooltip;
+        if (opts.tooltip == undefined) {
+            this.tooltip = null
+        } else {
+            this.tooltip = opts.tooltip;
+        }
         this.controlEl = L.DomUtil.create(
             "div",
             "leaflet-bar leaflet-control " + this.cls

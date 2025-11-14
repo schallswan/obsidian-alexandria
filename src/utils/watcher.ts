@@ -1,4 +1,4 @@
-import type { MarkerIcon, SavedOverlayData } from "../types";
+import type { MarkerIcon, SavedOverlayData } from "../../types";
 import {
     Component,
     Events,
@@ -11,11 +11,11 @@ import {
 import { Length } from "convert/dist/types/units";
 import { getId, OVERLAY_TAG_REGEX } from ".";
 
-import { LeafletSymbol } from "src/utils/leaflet-import";
+import { LeafletSymbol } from "../utils/leaflet-import";
 
-import { LeafletRenderer } from "src/renderer/renderer";
-import t from "src/l10n/locale";
-import { Marker, Overlay } from "src/layer";
+import { LeafletRenderer } from "../renderer/renderer";
+import t from "../l10n/locale";
+import { Marker, Overlay } from "../layer";
 const L = window[LeafletSymbol];
 
 export class Watcher extends Component {

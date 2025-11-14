@@ -1,8 +1,8 @@
 import { TextComponent } from "obsidian";
-import t from "src/l10n/locale";
+import t from "../l10n/locale";
 import { DrawControl } from "./controls";
 
-import { LeafletSymbol } from "src/utils/leaflet-import";
+import { LeafletSymbol } from "../utils/leaflet-import";
 import { BaseDrawControl } from "./base";
 const L = window[LeafletSymbol];
 
