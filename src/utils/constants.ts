@@ -28,6 +28,7 @@ export const DEFAULT_BLOCK_PARAMETERS: BlockParameters = {
     drawColor: "#3388ff",
     geojson: [],
     geojsonColor: "#3388ff",
+    geojsonbase: "",
     gpx: [],
     gpxColor: "#3388ff",
     height: "500px",

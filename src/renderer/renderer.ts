@@ -21,10 +21,10 @@ import type {
     SavedOverlayData
 } from "../../types";
 import type ObsidianLeaflet from "../main";
-import type { BaseMapType, ImageLayerData } from "../../types/map";
+import type { BaseMapType, ImageLayerData, GeoJSONLayerData } from "../../types/map";
 
 import Watcher from "../utils/watcher";
-import { RealMap, ImageMap } from "../map/map";
+import { RealMap, ImageMap, AzgaarMap } from "../map/map";
 import Loader from "../worker/loader";
 
 import { Length } from "convert/dist/types/units";
@@ -103,8 +103,8 @@ export class LeafletRenderer extends MarkdownRenderChild {
 
         this.parentEl = containerEl;
 
-        let hasAdditional = this.params.imageOverlay?.length > 0 ?? false;
-
+        let hasAdditional = this.params.imageOverlay?.length > 0;
+        new Notice(`layers ${this.params.layers[0]}`)
         if (this.params.image != "real") {
             hasAdditional = hasAdditional || this.params.layers.length > 1;
         } else {
@@ -121,6 +121,8 @@ export class LeafletRenderer extends MarkdownRenderChild {
         if (file instanceof TFile) {
             this.file = file;
         }
+        new Notice(`file ${this.file}`)
+
         let tileLayer: string[] = [];
         if (this.params.tileServer && this.params.tileServer.length) {
             tileLayer = [this.params.tileServer].flat();
@@ -138,6 +140,14 @@ export class LeafletRenderer extends MarkdownRenderChild {
                 .flat();
         }
 
+        // set map type
+        let mapType: "real" | "image" | "geojson" = "real";
+        if (this.params.geojsonbase != "") {
+            mapType = "geojson";
+        } else {
+            mapType = this.params.image != "real" ? "image" : "real"
+        }
+
         this.options = {
             bounds: this.params.bounds,
             context: this.sourcePath,
@@ -147,7 +157,6 @@ export class LeafletRenderer extends MarkdownRenderChild {
             draw: this.params.draw ?? this.plugin.data.enableDraw,
             drawColor: getHex(this.params.drawColor),
             geojsonColor: getHex(this.params.geojsonColor),
-            // gpxColor: getHex(this.params.gpxColor),
             hasAdditional,
             height: this.getHeight(this.params.height),
             id: this.params.id,
@@ -168,7 +177,7 @@ export class LeafletRenderer extends MarkdownRenderChild {
             tileLayer,
             tileOverlay,
             tileSubdomains: tileSubdomains,
-            type: this.params.image != "real" ? "image" : "real",
+            type: mapType, //this.params.image != "real" ? "image" : "real",
             unit: this.params.unit ?? this.plugin.defaultUnit,
             verbose: this.params.verbose,
             zoomDelta: +this.params.zoomDelta,
@@ -269,7 +278,7 @@ export class LeafletRenderer extends MarkdownRenderChild {
 
         if (this.options.type === "real") {
             this.map = new RealMap(this, this.options);
-        } else {
+        } else if (this.options.type === "image") {
             this.map = new ImageMap(this, this.options);
 
             let additionalLayers = this.options.layers.length > 1;
@@ -294,6 +303,22 @@ export class LeafletRenderer extends MarkdownRenderChild {
 
             this.map.log(`Loading layer data for ${this.map.id}.`);
             this.loader.loadImage(this.map.id, [this.options.layers[0]]);
+        } else {
+            this.map = new AzgaarMap(this, this.options);
+            this.loader.on(
+                `${this.map.id}-layer-data-ready`,
+                (layer: GeoJSONLayerData) => {
+                    this.map.log(
+                        `Data ready for layer ${decodeURIComponent(layer.id)}.`
+                    );
+                    if (this.map instanceof AzgaarMap) {
+                        this.map.registerLayerToBuild(layer);
+                    }
+                }
+            );
+            this.map.log(`Loading layer data for ${this.map.id}.`);
+
+            this.loader.loadGeoJSON(this.map.id, [this.options.layers[0]]);
         }
 
         this.map.on("removed", () => this.resize.disconnect());

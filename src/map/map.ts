@@ -1,3 +1,4 @@
+import { FeatureGroup } from './../../node_modules/@types/leaflet/index.d';
 import convert from "convert";
 import { Length } from "convert/dist/types/units";
 import type geojson from "geojson";
@@ -14,6 +15,7 @@ import {
     BaseMap as BaseMapDefinition,
     BaseMapType,
     ImageLayerData,
+    GeoJSONLayerData,
     SavedMapData,
     DistanceDisplay
 } from "../../types";
@@ -33,6 +35,7 @@ import {
     getId,
     icon,
     log,
+    parseLink,
     MODIFIER_KEY,
     TILE_SUBDOMAINS_SPILT
 } from "../utils";
@@ -47,7 +50,6 @@ import {
 } from "../controls";
 
 import { LeafletSymbol } from "../utils/leaflet-import";
-//import { gpxControl } from "../controls/gpx";
 import { LeafletRenderer } from "../renderer/renderer";
 import { mapViewControl, saveMapParametersControl } from "../controls/mapview";
 import t from "../l10n/locale";
@@ -58,6 +60,7 @@ import { ShapeProperties } from "../draw/shape";
 import LayerControl from "../controls/layers";
 import type { FilterMarkers } from "../controls/filter";
 import { LockControl, lockControl } from "../controls/lock";
+import { GeoJsonObject } from 'geojson';
 
 let L = window[LeafletSymbol];
 declare module "leaflet" {
@@ -95,17 +98,7 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
         alias?: string;
         note?: string;
     }[] = [];
-    // gpxControl: ReturnType<typeof gpxControl>;
-    // gpxData: { data: string; alias?: string }[] = [];
-    // gpxIcons: {
-    //     start: string;
-    //     end: string;
-    //     waypoint: string;
-    // } = {
-    //     start: null,
-    //     end: null,
-    //     waypoint: null
-    // };
+
     imageOverlayData: {
         id: string;
         data: string;
@@ -188,8 +181,6 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
         });
         this.leafletInstance.createPane("base-layer");
         this.leafletInstance.createPane("geojson");
-        //this.leafletInstance.createPane("gpx");
-        //this.leafletInstance.createPane("gpx-canvas");
         this.leafletInstance.createPane("drawing");
         this.leafletInstance.createPane("drawing-markers");
 
@@ -198,11 +189,6 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
         );
         this.readyForDrawings = true;
         this.trigger("ready-for-drawings");
-
-        // //@ts-expect-error
-        // this.canvas = L.Hotline.renderer({ pane: "gpx-canvas" }).addTo(
-        //     this.leafletInstance
-        // );
 
         /** Bind Map Events */
         this.leafletInstance.on("blur", () => {
@@ -266,7 +252,8 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
 
                 this.currentLayer = (layer as L.LayerGroup).getLayers()[0] as
                     | L.ImageOverlay
-                    | L.TileLayer;
+                    | L.TileLayer
+                    | L.GeoJSON;
 
                 this.resetZoom();
                 if (this.options.recenter) {
@@ -279,7 +266,7 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
     }
 
     contentEl: HTMLElement = createDiv();
-    currentLayer: L.TileLayer | L.ImageOverlay;
+    currentLayer: L.TileLayer | L.ImageOverlay | L.GeoJSON;
     get currentGroup() {
         return this.mapLayers?.find(
             (group) => group.layer == this.currentLayer
@@ -306,7 +293,6 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
     previousDistanceLines: L.Polyline[] = [];
     featureLayer: L.FeatureGroup;
     geojsonLayer: L.FeatureGroup;
-    //gpxLayer: L.FeatureGroup;
 
     get id() {
         return this.options.id;
@@ -318,7 +304,7 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
         return this.leafletInstance.isFullscreen();
     }
     leafletInstance: L.Map;
-    mapLayers: LayerGroup<L.TileLayer | L.ImageOverlay>[] = [];
+    mapLayers: LayerGroup<L.TileLayer | L.ImageOverlay | L.GeoJSON>[] = [];
     get markerIcons(): Map<string, MarkerIcon> {
         return new Map(
             [
@@ -507,8 +493,8 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
                         this.type === "image"
                             ? this.tempCircle.getRadius()
                             : convert(this.tempCircle.getRadius())
-                                  .from("m")
-                                  .to(this.unit),
+                                .from("m")
+                                .to(this.unit),
                     color: this.tempCircle.options.color,
                     loc: [
                         this.tempCircle.getLatLng().lat,
@@ -598,42 +584,6 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
                 `${added} GeoJSON feature${added == 1 ? "" : "s"} added to map.`
             );
         }
-
-        // /** Add GPX to map */
-        // if (this.gpxData.length > 0) {
-        //     added = 0;
-        //     this.addLayerControl();
-        //     //his.log(`Adding ${this.gpxData.length} GPX features to map.`);
-        //     this.gpxLayer = L.featureGroup().addTo(this.featureLayer);
-        //     for (let { data, alias } of this.gpxData) {
-        //         try {
-        //             const gpxInstance = new GPX(
-        //                 this as BaseMapType,
-        //                 data,
-        //                 this.gpxIcons
-        //             );
-        //             gpxInstance.show();
-        //             gpxInstance.leafletInstance.addTo(this.gpxLayer);
-        //             this.layerControl.addOverlay(
-        //                 gpxInstance.leafletInstance,
-        //                 alias ?? `GPX ${added + 1}`
-        //             );
-        //             added++;
-        //         } catch (e) {
-        //             console.error(e);
-        //             new Notice(
-        //                 t("There was an error adding GPX to map") +
-        //                     ` ${this.id}`
-        //             );
-        //             return;
-        //         }
-        //     }
-
-        //     this.gpxControl = gpxControl(
-        //         { position: "bottomleft" },
-        //         this
-        //     ).addTo(this.leafletInstance);
-        // }
 
         if (this.geojsonData.length) {
             if (this.options.zoomFeatures) {
@@ -770,10 +720,10 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
     }
 
     abstract buildLayer(layer?: {
-        data: string;
+        data: string | geojson.GeoJsonObject;  
         id: string;
         alias?: string;
-    }): Promise<L.TileLayer | L.ImageOverlay>;
+    }): Promise<L.TileLayer | L.ImageOverlay | L.GeoJSON>;
 
     closePopup(popup: L.Popup) {
         if (!popup) return;
@@ -1163,28 +1113,11 @@ export abstract class BaseMap extends Events implements BaseMapDefinition {
     }
     loadFeatureData(data: {
         geojsonData: { data: geojson.GeoJsonObject; alias?: string }[];
-        // gpxData: { data: string; alias?: string }[];
-        // gpxIcons: {
-        //     start: string;
-        //     end: string;
-        //     waypoint: string;
-        // };
     }) {
         this.geojsonData = [
             ...(this.geojsonData ?? []),
             ...(data.geojsonData ?? [])
         ];
-        // this.gpxData = [...(this.gpxData ?? []), ...(data.gpxData ?? [])];
-        // this.gpxIcons = {
-        //     ...{
-        //         start: null,
-        //         end: null,
-        //         waypoint: null
-        //     },
-        //     ...(this.gpxIcons ?? {}),
-        //     ...data.gpxIcons
-        // };
-        /* this.addFeatures(); */
     }
     log(text: string) {
         log(this.verbose, this.id, text);
@@ -1406,19 +1339,19 @@ export class RealMap extends BaseMap {
             ? layer.subdomains
             : this.plugin.data.defaultTileSubdomains
             ? this.plugin.data.defaultTileSubdomains
-                  .split(TILE_SUBDOMAINS_SPILT)
-                  .filter((s) => s)
-                  .map((s) => s.trim())
+                .split(TILE_SUBDOMAINS_SPILT)
+                .filter((s) => s)
+                .map((s) => s.trim())
             : DEFAULT_TILE_SUBDOMAINS;
         const tileLayer = L.tileLayer(layer.data, {
             ...(layer.data.contains("stamen-tiles")
                 ? {
-                      attribution: DEFAULT_ATTRIBUTION
-                  }
+                    attribution: DEFAULT_ATTRIBUTION
+                }
                 : {
-                      attribution: this.plugin.data.defaultAttribution,
-                      subdomains: subdomainsValue
-                  }),
+                    attribution: this.plugin.data.defaultAttribution,
+                    subdomains: subdomainsValue
+                }),
             className: this.options.darkMode ? "dark-mode" : ""
         });
 
@@ -1554,6 +1487,7 @@ export class RealMap extends BaseMap {
         }
     }
 }
+
 export class ImageMap extends BaseMap {
     CRS = L.CRS.Simple;
     currentLayer: L.ImageOverlay;
@@ -1707,6 +1641,148 @@ export class ImageMap extends BaseMap {
         this.readyToRender = true;
     }
     registerLayerToBuild(layer: ImageLayerData) {
+        if (this.readyToRender) {
+            this.buildLayer(layer);
+        } else {
+            this.on("ready-to-render", () => {
+                this.buildLayer(layer);
+            });
+        }
+    }
+}
+
+
+export class AzgaarMap extends BaseMap {
+    CRS = L.CRS.Simple;
+    currentLayer: L.GeoJSON;
+    //dimensions: { h: number; w: number };
+    mapLayers: LayerGroup<L.GeoJSON>[] = [];
+    type: "geojson" = "geojson";
+    readyToRender: boolean;
+    get plugin() {
+        return this.renderer.plugin;
+    }
+
+    constructor(
+        public renderer: LeafletRenderer,
+        public options: LeafletMapOptions
+    ) {
+        super(renderer, options);
+        this.createMap();
+    }
+
+    get bounds() {
+        return this.currentLayer.getBounds();
+    }
+
+    get scale() {
+        return this.options.scale ?? 1;
+    }
+
+    setInitialCoords(coords: [number, number]) {
+        let mult: [number, number] = [1, 1];
+        if (!this.options.bounds) {
+            new Notice(`bounds ${this.currentLayer.getBounds()}`)
+            mult = [
+                this.bounds.getCenter().lat / 50,
+                this.bounds.getCenter().lng / 50
+            ];
+        }
+        this.initialCoords = [coords[0] * mult[0], coords[1] * mult[1]];
+    }
+    private _buildMapLayer(layer: {
+        data: GeoJsonObject;
+        id: string;
+        alias?: string;
+    }): LayerGroup<L.GeoJSON> {
+        if (!this.mapLayers.length) {
+            this.log("map.ts: 1699: Building initial map layer. ");
+        }
+
+        const mapLayer = L.geoJSON(layer.data, {
+            pane: "base-layer"
+        });
+
+        const markerGroups = Object.fromEntries(
+            this.markerTypes.map((type) => [type, L.layerGroup()])
+        );
+        markerGroups.custom = L.layerGroup();
+
+        const overlayGroups = {
+            none: L.layerGroup(),
+            ...Object.fromEntries(
+                this.markerTypes.map((type) => [type, L.layerGroup()])
+            )
+        };
+        const group = L.layerGroup([
+            mapLayer,
+            ...Object.values(markerGroups),
+            ...Object.values(overlayGroups)
+        ]);
+
+        const layerGroup: LayerGroup<L.GeoJSON> = {
+            group: group,
+            layer: mapLayer,
+            id: layer.id,
+            markers: markerGroups,
+            overlays: overlayGroups,
+            alias: layer.alias
+        };
+
+        return layerGroup;
+    }
+    async buildLayer(layer: GeoJSONLayerData) {
+        const newLayer = this._buildMapLayer(layer);
+        this.mapLayers.push(newLayer);
+        this.trigger(`layer-ready-for-features`, newLayer.id);
+        if (this.mapLayers.length === 1) {
+            this.currentLayer = this.mapLayers[0].layer;
+            this.trigger("first-layer-ready", this.currentGroup.id);
+            if (this.options.recenter) {
+                this.leafletInstance.setMaxBounds(this.bounds);
+            }
+        }
+
+        this.layerControl.addBaseLayer(
+            newLayer.group,
+            layer.alias ?? `Layer ${this.mapLayers.length}`
+        );
+
+        this.mapLayers[0].layer.once("load", () => {
+            this.rendered = true;
+            this.log(
+                `Initial map layer rendered in ${
+                    (Date.now() - this.start) / 1000
+                } seconds.`
+            );
+            this.trigger("rendered");
+        });
+
+        return newLayer.layer;
+    }
+    async render(options: {
+        coords: [number, number];
+        zoomDistance: number;
+        imageOverlayData: {
+            id: string;
+            data: string;
+            alias: string;
+            bounds: [[number, number], [number, number]];
+        }[];
+    }) {
+        this.renderOptions = {
+            coords: options.coords,
+            zoomDistance: options.zoomDistance
+        };
+        this.imageOverlayData = options.imageOverlayData;
+
+        this.log("Beginning render process.");
+        this.start = Date.now();
+
+        this.trigger("ready-to-render");
+        this.readyToRender = true;
+    }
+    registerLayerToBuild(layer: GeoJSONLayerData) {
         if (this.readyToRender) {
             this.buildLayer(layer);
         } else {

@@ -56,6 +56,7 @@ export interface BlockParameters {
     linksFrom?: string[];
     geojsonFolder?: string[];
     geojson?: string[];
+    geojsonbase?: string;
     gpxFolder?: string[];
     gpx?: string[];
     gpxMarkers?: {

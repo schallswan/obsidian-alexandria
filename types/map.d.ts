@@ -14,7 +14,7 @@ import type { LeafletRenderer } from "../src/renderer/renderer";
 import { DrawingController } from "../src/draw/controller";
 import { ShapeProperties } from "../src/draw/shape";
 import type geojson from "geojson";
-import type ObsidianLeaflet from "../src/main";
+import type ObsidianAlexandria from "../src/main";
 
 export interface ImageLayerData {
     data: string;
@@ -23,7 +23,14 @@ export interface ImageLayerData {
     h: number;
     w: number;
 }
-export interface LayerGroup<T extends L.TileLayer | L.ImageOverlay> {
+
+export interface GeoJSONLayerData {
+    data: geojson.GeoJsonObject;
+    alias: string;
+    id: string;
+}
+
+export interface LayerGroup<T extends L.TileLayer | L.ImageOverlay | L.GeoJSON> {
     /** Layer group containing the marker layer groups */
     group: L.LayerGroup;
 
@@ -66,7 +73,6 @@ export interface LeafletMapOptions {
     drawColor?: string;
 
     geojsonColor?: string;
-    // gpxColor?: string;
 
     localMarkerTypes?: MarkerIcon[];
 
@@ -110,7 +116,7 @@ export interface LeafletMapOptions {
 
     tileSubdomains: string[];
 
-    type?: "image" | "real";
+    type?: "image" | "real" | "geojson";
     verbose?: boolean;
     zoomDelta?: number;
     zoomFeatures?: boolean;
@@ -163,9 +169,9 @@ declare abstract class BaseMap /* <
 
     controller: DrawingController;
 
-    get currentGroup(): LayerGroup<L.TileLayer | L.ImageOverlay>;
+    get currentGroup(): LayerGroup<L.TileLayer | L.ImageOverlay | L.GeoJSON>;
     contentEl: HTMLElement;
-    currentLayer: L.ImageOverlay | L.TileLayer;
+    currentLayer: L.ImageOverlay | L.TileLayer | L.GeoJSON;
 
     get data(): ObsidianAppData;
     get defaultIcon(): MarkerIcon;
@@ -188,7 +194,7 @@ declare abstract class BaseMap /* <
     get isFullscreen(): boolean;
 
     leafletInstance: L.Map;
-    mapLayers: LayerGroup<L.TileLayer | L.ImageOverlay>[];
+    mapLayers: LayerGroup<L.TileLayer | L.ImageOverlay | L.GeoJSON>[];
 
     markers: Marker[];
     get markerIcons(): Map<string, MarkerIcon>;
@@ -197,7 +203,7 @@ declare abstract class BaseMap /* <
     options: LeafletMapOptions;
     overlays: Overlay[];
 
-    get plugin(): ObsidianLeaflet;
+    get plugin(): ObsidianAlexandria;
 
     popup: Popup;
     previousDistanceLines: L.Polyline[];
@@ -333,6 +339,7 @@ declare class RealMap extends BaseMap /* <L.TileLayer> */ {
         }[];
     }): Promise<void>;
 }
+
 declare class ImageMap extends BaseMap /* <L.ImageOverlay> */ {
     CRS: L.CRS;
     type: string;
@@ -358,7 +365,31 @@ declare class ImageMap extends BaseMap /* <L.ImageOverlay> */ {
     buildLayer(layer: ImageLayerData): Promise<void>;
 }
 
-export type BaseMapType = RealMap | ImageMap;
+declare class AzgaarMap extends BaseMap /* <L.GeoJSON> */ {
+    CRS: L.CRS;
+    type: string;
+    constructor(renderer: LeafletRenderer, options: LeafletMapOptions);
+
+    get bounds(): L.LatLngBounds;
+
+    get scale(): number;
+
+    setInitialCoords(coords: [number, number]): void;
+
+    render(options: {
+        coords: [number, number];
+        zoomDistance: number;
+        imageOverlayData?: {
+            id: string;
+            data: string;
+            alias: string;
+        }[];
+    }): Promise<void>;
+    buildLayer(layer: GeoJSONLayerData): Promise<void>;
+
+}
+
+export type BaseMapType = RealMap | ImageMap | AzgaarMap;
 
 export interface SavedMapData {
     id: string;

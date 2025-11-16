@@ -281,6 +281,14 @@ export function getParamsFromSource(source: string): BlockParameters {
             );
         }
 
+        /** Get geoJSON base layer if it exists */
+        if ((source.match(/^\bgeojsonbase\b:[\s\S]*?$/gm) ?? []).length > 0) {
+            layers = (source.match(/^\bgeojsonbase\b:([\s\S]*?)$/gm) || []).map(
+                (p) => p.split("geojsonbase: ")[1]
+            );
+
+        }
+
         if (typeof params.image === "string") {
             image = [params.image];
         } else if (params.image instanceof Array) {

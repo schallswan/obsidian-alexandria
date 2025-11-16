@@ -1,6 +1,6 @@
 import { ItemView, MarkdownRenderChild, WorkspaceLeaf } from "obsidian";
 
-import type ObsidianLeaflet from "../src/main";
+import type ObsidianAlexandria from "../src/main";
 import { BaseMapType } from "./map";
 
 export class LeafletMapView extends ItemView {
@@ -8,7 +8,7 @@ export class LeafletMapView extends ItemView {
     mapEl: HTMLDivElement;
     innerContentEl: HTMLDivElement;
     context: MarkdownRenderChild;
-    constructor(leaf: WorkspaceLeaf, plugin: ObsidianLeaflet);
+    constructor(leaf: WorkspaceLeaf, plugin: ObsidianAlexandria);
     onOpen(): Promise<void>;
     update(): void;
     getDisplayText(): string;

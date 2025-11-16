@@ -7,7 +7,7 @@ export abstract class Layer<T extends L.Layer> {
 
     abstract popup: Popup;
 
-    get mapLayer(): LayerGroup<L.TileLayer | L.ImageOverlay>;
+    get mapLayer(): LayerGroup<L.TileLayer | L.ImageOverlay | L.GeoJSON>;
 
     abstract leafletInstance: T;
     abstract get group(): L.LayerGroup;

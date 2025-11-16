@@ -4,7 +4,7 @@ import t from "../l10n/locale";
 import { EditParametersModal } from "../modals/mapview";
 import { LeafletRenderer } from "../renderer/renderer";
 import { DEFAULT_BLOCK_PARAMETERS, VIEW_TYPE } from "../utils";
-import type ObsidianLeaflet from "../main";
+import type ObsidianAlexandria from "../main";
 
 export class LeafletMapView extends ItemView {
     map: BaseMapType;
@@ -20,7 +20,7 @@ export class LeafletMapView extends ItemView {
             isMapView: true
         };
     }
-    constructor(public leaf: WorkspaceLeaf, public plugin: ObsidianLeaflet) {
+    constructor(public leaf: WorkspaceLeaf, public plugin: ObsidianAlexandria) {
         super(leaf);
         this.innerContentEl = this.contentEl.createDiv({
             cls: "markdown-preview-view",

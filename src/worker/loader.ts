@@ -1,17 +1,34 @@
-import { App, Events, Notice } from "obsidian";
+import { App, Events, Notice, TFile } from "obsidian";
 
 import { parseLink } from "../utils";
 import { ImageLayerData } from "../../types";
 import t from "../l10n/locale";
+import { GeoJsonObject } from 'geojson';
+
 
 export default class Loader extends Events {
     constructor(public app: App) {
         super();
     }
+
+    async loadGeoJSON(id: string, layers: string[]): Promise<void> {
+        for (let image of layers) {
+            const { link, data, id: layerId, alias } = await this.getJson(image);
+            new Notice(`link: ${link}`)
+            const layer = {
+                data: data,
+                alias,
+                id: layerId
+            };
+        this.trigger(`${id}-layer-data-ready`, layer);
+        }
+    }
+
+
     async loadImage(id: string, layers: string[]): Promise<void> {
         for (let image of layers) {
             const { link, id: layerId, alias } = await this.getLink(image);
-
+            new Notice(`link: ${link}`)
             const { h, w } = await this.getImageDimensions(link);
             const layer = {
                 data: link,
@@ -90,4 +107,33 @@ export default class Loader extends Events {
         }
         return { link, id: encodeURIComponent(url), alias };
     }
+
+    async getJson(url: string) {
+        // load file
+        const [linkpath, aliaspath] = parseLink(url).split("|")
+        let alias: string = aliaspath && aliaspath.length ? aliaspath : null;
+        let link: string;
+        let data: GeoJsonObject;
+
+        const file = this.app.metadataCache.getFirstLinkpathDest(
+            linkpath,
+            ""
+        );
+        if (file && file instanceof TFile) {
+            const raw = await this.app.vault.read(file);
+            try {
+                data = JSON.parse(raw);
+            } catch (e) {
+                new Notice(
+                    t("Could not parse GeoJSON file") +
+                        ` ${linkpath}` +
+                        "\n\n" +
+                        e.message
+                );
+            }
+            link = this.app.vault.getResourcePath(file);
+        }
+        return {link, data, id: encodeURIComponent(url), alias}
+    }
+
 }

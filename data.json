@@ -1,5 +1,52 @@
 {
-  "mapMarkers": [],
+  "mapMarkers": [
+    {
+      "id": "duria",
+      "lastAccessed": 1763226536631,
+      "markers": [
+        {
+          "id": "ID_e9d898590818",
+          "type": "default",
+          "loc": [
+            -0.81640625,
+            1.1494140625
+          ],
+          "layer": "%5B%5BDuria%202025-10-31-09-46.svg%5D%5D",
+          "mutable": true,
+          "command": false,
+          "percent": null,
+          "description": null,
+          "minZoom": null,
+          "maxZoom": null,
+          "tooltip": "hover"
+        },
+        {
+          "id": "ID_8929ebc92919",
+          "type": "default",
+          "loc": [
+            -56.5,
+            -3.5
+          ],
+          "layer": "%5B%5BDuria%202025-10-31-09-46.svg%5D%5D",
+          "mutable": true,
+          "command": false,
+          "percent": [
+            -1.1914893617021276,
+            36.80407124681934
+          ],
+          "description": null,
+          "minZoom": null,
+          "maxZoom": null,
+          "tooltip": "hover"
+        }
+      ],
+      "overlays": [],
+      "shapes": [],
+      "files": [
+        "Untitled.md"
+      ]
+    }
+  ],
   "defaultMarker": {
     "type": "default",
     "iconName": "map-marker",
@@ -14,7 +61,7 @@
   "color": "#dddddd",
   "lat": 39.983334,
   "long": -82.98333,
-  "notePreview": false,
+  "notePreview": true,
   "layerMarkers": true,
   "previousVersion": "6.0.5",
   "version": {
